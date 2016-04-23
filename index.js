@@ -54,8 +54,35 @@ function type (num) {
   return TYPES[(num - 1) % 7]
 }
 
+function dirStr (dir) { return dir === -1 ? '-' : '' }
+function num (simple, oct) { return simple + 7 * oct }
+
 /**
- * Build a shorthand interval notation string from properties
+ * Build a shorthand interval notation string from properties.
+ *
+ * @param {Integer} simple - the interval simple number (from 1 to 7)
+ * @param {Integer} alt - the quality expressed in numbers. 0 means perfect
+ * or major, depending of the interval number.
+ * @param {Integer} oct - the number of octaves the interval spans.
+ * 0 por simple intervals. Positive number.
+ * @param {Integer} dir - the interval direction: 1 ascending, -1 descending.
+ * @example
+ * var interval = require('interval-notation')
+ * interval.shorthand(3, 0, 0, 1) // => 'M3'
+ * interval.shorthand(3, -1, 0, -1) // => 'm-3'
+ * interval.shorthand(3, 1, 1, 1) // => 'A10'
+ */
+function shorthand (simple, alt, oct, dir) {
+  return altToQ(simple, alt) + dirStr(dir) + num(simple, oct)
+}
+/**
+ * Build a special shorthand interval notation string from properties.
+ * The special shorthand interval notation changes the order or the standard
+ * shorthand notation so instead of 'M-3' it returns '-3M'.
+ *
+ * The standard shorthand notation has a string 'A4' (augmented four) that can't
+ * be differenciate from 'A4' (the A note in 4th octave), so the purpose of this
+ * notation is avoid collisions
  *
  * @param {Integer} simple - the interval simple number (from 1 to 7)
  * @param {Integer} alt - the quality expressed in numbers. 0 means perfect
@@ -66,14 +93,11 @@ function type (num) {
  * @example
  * var interval = require('interval-notation')
  * interval.build(3, 0, 0, 1) // => '3M'
- * interval.build(3, -1, 0, 1) // => '3m'
+ * interval.build(3, -1, 0, -1) // => '-3m'
  * interval.build(3, 1, 1, 1) // => '10A'
  */
 function build (simple, alt, oct, dir) {
-  var d = dir === -1 ? '-' : ''
-  var n = simple + 7 * oct
-  var q = altToQ(type(simple), alt)
-  return d + n + q
+  return dirStr(dir) + num(simple, oct) + altToQ(simple, alt)
 }
 
 /**
@@ -120,4 +144,6 @@ function altToQ (num, alt) {
   else return null
 }
 
-module.exports = { parse: parse, type: type, altToQ: altToQ, qToAlt: qToAlt, build }
+module.exports = { parse: parse, type: type,
+  altToQ: altToQ, qToAlt: qToAlt,
+  build: build, shorthand: shorthand }

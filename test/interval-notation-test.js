@@ -1,7 +1,7 @@
 /* global describe it */
 
 var assert = require('assert')
-var ivlNotation = require('..')
+var interval = require('..')
 
 function split (a) { return Array.isArray(a) ? a : a.split(' ') }
 function map (fn) {
@@ -10,8 +10,8 @@ function map (fn) {
 
 describe('interval notation', function () {
   describe('parse', function () {
-    var parse = ivlNotation.parse
-    var intervals = map(ivlNotation.parse)
+    var parse = interval.parse
+    var intervals = map(interval.parse)
     it('parses tonal shorthand notation', function functionName() {
       assert.deepEqual(parse('3M'), { num: 3, q: 'M', dir: 1,
         simple: 3, type: 'M', alt: 0, oct: 0, size: 4 })
@@ -25,22 +25,32 @@ describe('interval notation', function () {
   })
   describe('qToAlt', function () {
     it('get alteration of majorables intervals', function () {
-      var maj = map(function (a) { return ivlNotation.qToAlt('M', a) })
+      var maj = map(function (a) { return interval.qToAlt('M', a) })
       assert.deepEqual(maj('dddd ddd dd d m M A AA AAA AAAA'),
         [ -5, -4, -3, -2, -1, 0, 1, 2, 3, 4 ])
     })
     it('get alteration of perfetables intervals', function () {
-      var per = map(function (a) { return ivlNotation.qToAlt('P', a) })
+      var per = map(function (a) { return interval.qToAlt('P', a) })
       assert.deepEqual(per('dddd ddd dd d P A AA AAA AAAA'),
         [ -4, -3, -2, -1, 0, 1, 2, 3, 4 ])
     })
     it('accepts interval numbers', function () {
-      assert.equal(ivlNotation.qToAlt(2, 'd'), -2)
+      assert.equal(interval.qToAlt(2, 'd'), -2)
     })
   })
 
-  describe('toString', function () {
-    var str = ivlNotation.build
+  describe('shorthand', function () {
+    var str = interval.shorthand
+    it('get interval string', function () {
+      assert.equal(str(1, 0, 1, 1), 'P8')
+      assert.equal(str(1, 1, 1, 1), 'A8')
+      assert.equal(str(1, 0, 1, -1), 'P-8')
+      assert.equal(str(1, 1, 1, -1), 'A-8')
+    })
+  })
+
+  describe('build', function () {
+    var str = interval.build
     it('get interval string', function () {
       assert.equal(str(1, 0, 1, 1), '8P')
       assert.equal(str(1, 1, 1, 1), '8A')
@@ -51,12 +61,12 @@ describe('interval notation', function () {
 
   describe('altToQ', function () {
     it('get quality of majorables intervals', function () {
-      var maj = map(function (a) { return ivlNotation.altToQ('M', a) })
+      var maj = map(function (a) { return interval.altToQ('M', a) })
       assert.deepEqual(maj([ -5, -4, -3, -2, -1, 0, 1, 2, 3, 4 ]),
         [ 'dddd', 'ddd', 'dd', 'd', 'm', 'M', 'A', 'AA', 'AAA', 'AAAA' ])
     })
     it('get quality of perfectables intervals', function () {
-      var per = map(function (a) { return ivlNotation.altToQ('P', a) })
+      var per = map(function (a) { return interval.altToQ('P', a) })
       assert.deepEqual(per([ -4, -3, -2, -1, 0, 1, 2, 3, 4 ]),
         [ 'dddd', 'ddd', 'dd', 'd', 'P', 'A', 'AA', 'AAA', 'AAAA' ])
     })

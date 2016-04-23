@@ -11,10 +11,10 @@ with interval components and properties (including interval size in semitones). 
 Install via npm: `npm i --save interval-notation` and require it:
 
 ```js
-var parse = require('interval-notation').parse
-parse('M3')
-// => { num: 3, q: 'M', dir: 1, simple: 3,
-//      type: 'M', alt: 0, oct: 0, size: 4 }
+var interval = require('interval-notation')
+interval.parse('M3') // => { num: 3, q: 'M', dir: 1, simple: 3,
+                     //      type: 'M', alt: 0, oct: 0, size: 4 }
+interval.shorthand(3, 0, 0, 1) // => 'M3'
 ```
 
 ## Tests and documentation

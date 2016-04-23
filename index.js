@@ -91,23 +91,15 @@ function build (simple, alt, oct, dir) {
  */
 function qToAlt (num, q) {
   var t = typeof num === 'number' ? type(num) : num
-  if (t === 'P') {
-    if (q === 'P') return 0
-    else if (q[0] === 'A') return q.length
-    else if (q[0] === 'd') return -q.length
-  } else if (t === 'M') {
-    if (q === 'M') return 0
-    else if (q === 'm') return -1
-    else if (q[0] === 'A') return q.length
-    else if (q[0] === 'd') return -(q.length + 1)
-  }
+  if (q === 'M' && t === 'M') return 0
+  if (q === 'P' && t === 'P') return 0
+  if (q === 'm' && t === 'M') return -1
+  if (/^A+$/.test(q)) return q.length
+  if (/^d+$/.test(q)) return t === 'P' ? -q.length : -q.length - 1
   return null
 }
 
-const ALTERS = {
-  P: ['dddd', 'ddd', 'dd', 'd', 'P', 'A', 'AA', 'AAA', 'AAAA'],
-  M: ['ddd', 'dd', 'd', 'm', 'M', 'A', 'AA', 'AAA', 'AAAA']
-}
+function fillStr(s, n) { return Array(Math.abs(n) + 1).join(s) }
 /**
  * Get interval quality from interval type and alteration
  *
@@ -121,8 +113,11 @@ const ALTERS = {
  */
 function altToQ (num, alt) {
   var t = typeof num === 'number' ? type(Math.abs(num)) : num
-  var alts = ALTERS[t]
-  return alts ? alts[alt + 4] : null
+  if (alt === 0) return t === 'M' ? 'M' : 'P'
+  else if (alt === -1 && t === 'M') return 'm'
+  else if (alt > 0) return fillStr('A', alt)
+  else if (alt < 0) return fillStr('d', t === 'P' ? alt : alt + 1)
+  else return null
 }
 
 module.exports = { parse: parse, type: type, altToQ: altToQ, qToAlt: qToAlt, build }

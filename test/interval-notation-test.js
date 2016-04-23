@@ -51,10 +51,9 @@ describe('interval notation', function () {
 
   describe('altToQ', function () {
     it('get quality of majorables intervals', function () {
-      // TODO: remove the undefined
       var maj = map(function (a) { return ivlNotation.altToQ('M', a) })
       assert.deepEqual(maj([ -5, -4, -3, -2, -1, 0, 1, 2, 3, 4 ]),
-        [ undefined, 'ddd', 'dd', 'd', 'm', 'M', 'A', 'AA', 'AAA', 'AAAA' ])
+        [ 'dddd', 'ddd', 'dd', 'd', 'm', 'M', 'A', 'AA', 'AAA', 'AAAA' ])
     })
     it('get quality of perfectables intervals', function () {
       var per = map(function (a) { return ivlNotation.altToQ('P', a) })

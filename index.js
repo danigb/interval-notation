@@ -1,11 +1,11 @@
 'use strict'
 
 // shorthand tonal notation (with quality after number)
-const IVL_TNL = '([-+]?)(\\d+)(d{1,4}|m|M|P|A{1,4})'
+var IVL_TNL = '([-+]?)(\\d+)(d{1,4}|m|M|P|A{1,4})'
 // standard shorthand notation (with quality before number)
-const IVL_STR = '(AA|A|P|M|m|d|dd)([-+]?)(\\d+)'
-const COMPOSE = '(?:(' + IVL_TNL + ')|(' + IVL_STR + '))'
-const IVL_REGEX = new RegExp('^' + COMPOSE + '$')
+var IVL_STR = '(AA|A|P|M|m|d|dd)([-+]?)(\\d+)'
+var COMPOSE = '(?:(' + IVL_TNL + ')|(' + IVL_STR + '))'
+var IVL_REGEX = new RegExp('^' + COMPOSE + '$')
 
 /**
  * Parse a string with an interval in [shorthand notation](https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
@@ -30,7 +30,7 @@ const IVL_REGEX = new RegExp('^' + COMPOSE + '$')
  */
 function parse (str) {
   if (typeof str !== 'string') return null
-  const m = IVL_REGEX.exec(str)
+  var m = IVL_REGEX.exec(str)
   if (!m) return null
   var i = { num: +(m[3] || m[8]), q: m[4] || m[6] }
   i.dir = (m[2] || m[7]) === '-' ? -1 : 1
@@ -44,7 +44,7 @@ function parse (str) {
 }
 var SIZES = [0, 2, 4, 5, 7, 9, 11]
 
-const TYPES = 'PMMPPMM'
+var TYPES = 'PMMPPMM'
 /**
  * Get the type of interval. Can be perfectavle ('P') or majorable ('M')
  * @param {Integer} num - the interval number

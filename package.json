@@ -1,0 +1,33 @@
+{
+  "name": "interval-notation",
+  "version": "0.1.0",
+  "description": "Parse and build music intervals in shorthand notation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "api": "jsdoc2md index.js > API.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danigb/interval-notation.git"
+  },
+  "keywords": [
+    "interval",
+    "parse",
+    "parser",
+    "string",
+    "shorthand",
+    "notation",
+    "music",
+    "theory"
+  ],
+  "author": "danigb <danigb@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danigb/interval-notation/issues"
+  },
+  "homepage": "https://github.com/danigb/interval-notation#readme",
+  "devDependencies": {
+    "mocha": "*"
+  }
+}

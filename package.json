@@ -1,6 +1,6 @@
 {
   "name": "interval-notation",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Parse and build music intervals in shorthand notation",
   "main": "index.js",
   "scripts": {

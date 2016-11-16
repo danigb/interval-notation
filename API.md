@@ -1,15 +1,23 @@
 ## Functions
 
 <dl>
-<dt><a href="#parse">parse(str)</a> ⇒ <code>Object</code></dt>
-<dd><p>Parse a string with an interval in <a href="https://en.wikipedia.org/wiki/Interval_(music">shorthand notation</a>#Shorthand_notation)
-and returns an object with interval properties</p>
+<dt><a href="#parse">parse(str, strict)</a> ⇒ <code>Object</code></dt>
+<dd><p>Parse a string with an interval in shorthand notation (<a href="https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation">https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation</a>)
+and returns an object with interval properties.</p>
 </dd>
 <dt><a href="#type">type(num)</a> ⇒ <code>String</code></dt>
 <dd><p>Get the type of interval. Can be perfectavle (&#39;P&#39;) or majorable (&#39;M&#39;)</p>
 </dd>
+<dt><a href="#shorthand">shorthand(simple, alt, oct, dir)</a></dt>
+<dd><p>Build a shorthand interval notation string from properties.</p>
+</dd>
 <dt><a href="#build">build(simple, alt, oct, dir)</a></dt>
-<dd><p>Build a shorthand interval notation string from properties</p>
+<dd><p>Build a special shorthand interval notation string from properties.
+The special shorthand interval notation changes the order or the standard
+shorthand notation so instead of &#39;M-3&#39; it returns &#39;-3M&#39;.</p>
+<p>The standard shorthand notation has a string &#39;A4&#39; (augmented four) that can&#39;t
+be differenciate from &#39;A4&#39; (the A note in 4th octave), so the purpose of this
+notation is avoid collisions</p>
 </dd>
 <dt><a href="#qToAlt">qToAlt(num, quality)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get an alteration number from an interval quality string.
@@ -22,9 +30,9 @@ It accepts the standard <code>dmMPA</code> but also sharps and flats.</p>
 
 <a name="parse"></a>
 
-## parse(str) ⇒ <code>Object</code>
-Parse a string with an interval in [shorthand notation](https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
-and returns an object with interval properties
+## parse(str, strict) ⇒ <code>Object</code>
+Parse a string with an interval in shorthand notation (https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
+and returns an object with interval properties.
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - an object properties or null if not valid interval string
@@ -41,6 +49,7 @@ The returned object contains:
 | Param | Type | Description |
 | --- | --- | --- |
 | str | <code>String</code> | the string with the interval |
+| strict | <code>Boolean</code> | (Optional) if its false, it doesn't check if the interval is valid or not. For example, parse('P2') returns null (because a perfect second is not a valid interval), but parse('P2', false) it returns { num: 2, dir: 1, q: 'P'... } |
 
 **Example**  
 ```js
@@ -61,10 +70,37 @@ Get the type of interval. Can be perfectavle ('P') or majorable ('M')
 | --- | --- | --- |
 | num | <code>Integer</code> | the interval number |
 
+<a name="shorthand"></a>
+
+## shorthand(simple, alt, oct, dir)
+Build a shorthand interval notation string from properties.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| simple | <code>Integer</code> | the interval simple number (from 1 to 7) |
+| alt | <code>Integer</code> | the quality expressed in numbers. 0 means perfect or major, depending of the interval number. |
+| oct | <code>Integer</code> | the number of octaves the interval spans. 0 por simple intervals. Positive number. |
+| dir | <code>Integer</code> | the interval direction: 1 ascending, -1 descending. |
+
+**Example**  
+```js
+var interval = require('interval-notation')
+interval.shorthand(3, 0, 0, 1) // => 'M3'
+interval.shorthand(3, -1, 0, -1) // => 'm-3'
+interval.shorthand(3, 1, 1, 1) // => 'A10'
+```
 <a name="build"></a>
 
 ## build(simple, alt, oct, dir)
-Build a shorthand interval notation string from properties
+Build a special shorthand interval notation string from properties.
+The special shorthand interval notation changes the order or the standard
+shorthand notation so instead of 'M-3' it returns '-3M'.
+
+The standard shorthand notation has a string 'A4' (augmented four) that can't
+be differenciate from 'A4' (the A note in 4th octave), so the purpose of this
+notation is avoid collisions
 
 **Kind**: global function  
 
@@ -79,7 +115,7 @@ Build a shorthand interval notation string from properties
 ```js
 var interval = require('interval-notation')
 interval.build(3, 0, 0, 1) // => '3M'
-interval.build(3, -1, 0, 1) // => '3m'
+interval.build(3, -1, 0, -1) // => '-3m'
 interval.build(3, 1, 1, 1) // => '10A'
 ```
 <a name="qToAlt"></a>

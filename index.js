@@ -8,10 +8,14 @@ var COMPOSE = '(?:(' + IVL_TNL + ')|(' + IVL_STR + '))'
 var IVL_REGEX = new RegExp('^' + COMPOSE + '$')
 
 /**
- * Parse a string with an interval in [shorthand notation](https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
- * and returns an object with interval properties
+ * Parse a string with an interval in shorthand notation (https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
+ * and returns an object with interval properties.
  *
  * @param {String} str - the string with the interval
+ * @param {Boolean} strict - (Optional) if its false, it doesn't check if the
+ * interval is valid or not. For example, parse('P2') returns null
+ * (because a perfect second is not a valid interval), but
+ * parse('P2', false) it returns { num: 2, dir: 1, q: 'P'... }
  * @return {Object} an object properties or null if not valid interval string
  * The returned object contains:
  * - `num`: the interval number
@@ -28,7 +32,7 @@ var IVL_REGEX = new RegExp('^' + COMPOSE + '$')
  * // => { num: 3, q: 'M', dir: 1, simple: 3,
  * //      type: 'M', alt: 0, oct: 0, size: 4 }
  */
-function parse (str) {
+function parse (str, strict) {
   if (typeof str !== 'string') return null
   var m = IVL_REGEX.exec(str)
   if (!m) return null
@@ -40,6 +44,9 @@ function parse (str) {
   i.alt = qToAlt(i.type, i.q)
   i.oct = Math.floor((i.num - 1) / 7)
   i.size = i.dir * (SIZES[step] + i.alt + 12 * i.oct)
+  if (strict !== false) {
+    if (i.type === 'M' && i.q === 'P') return null
+  }
   return i
 }
 var SIZES = [0, 2, 4, 5, 7, 9, 11]
@@ -123,7 +130,7 @@ function qToAlt (num, q) {
   return null
 }
 
-function fillStr(s, n) { return Array(Math.abs(n) + 1).join(s) }
+function fillStr (s, n) { return Array(Math.abs(n) + 1).join(s) }
 /**
  * Get interval quality from interval type and alteration
  *

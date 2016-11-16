@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/danigb/interval-notation.svg?branch=master)](https://travis-ci.org/danigb/interval-notation) [![Code Climate](https://codeclimate.com/github/danigb/interval-notation/badges/gpa.svg)](https://codeclimate.com/github/danigb/interval-notation)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
-Parse music intervals in [shorthand notation](https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation) with javascript. Given a string, obtain a hash
-with interval components and properties (including interval size in semitones). Given an interval properties, build a string.
+Parse music intervals in shorthand notation (https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation) with javascript. Given a string, obtain an object
+with interval properties (including interval size in semitones). It provides function to build string from its properties.
 
 ## Usage
 

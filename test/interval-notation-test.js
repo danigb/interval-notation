@@ -12,7 +12,7 @@ describe('interval notation', function () {
   describe('parse', function () {
     var parse = interval.parse
     var intervals = map(interval.parse)
-    it('parses tonal shorthand notation', function functionName() {
+    it('parses tonal shorthand notation', function () {
       assert.deepEqual(parse('3M'), { num: 3, q: 'M', dir: 1,
         simple: 3, type: 'M', alt: 0, oct: 0, size: 4 })
       assert.deepEqual(parse('-9m'), { num: 9, q: 'm', dir: -1,
@@ -21,6 +21,13 @@ describe('interval notation', function () {
     it('parses tonal strict notation', function () {
       assert.deepEqual(intervals('1P 2M 3M 4P 5P 6M 7M'),
         intervals('P1 M2 M3 P4 P5 M6 M7'))
+    })
+    it('strictoption', function () {
+      assert.equal(parse('blah'), null)
+      assert.equal(parse('blah', false), null)
+      assert.equal(parse('P2'), null)
+      assert.deepEqual(parse('P2', false), { num: 2, q: 'P', dir: 1,
+        simple: 2, type: 'M', alt: null, oct: 0, size: 2 })
     })
   })
   describe('qToAlt', function () {

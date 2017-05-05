@@ -1,3 +1,4 @@
+/* eslint-disable object-property-newline */
 /* global describe it */
 
 var assert = require('assert')
@@ -63,6 +64,7 @@ describe('interval notation', function () {
       assert.equal(str(1, 1, 1, 1), '8A')
       assert.equal(str(1, 0, 1, -1), '-8P')
       assert.equal(str(1, 1, 1, -1), '-8A')
+      assert.equal(str(7, 0, 0, 1), '7M')
     })
   })
 

@@ -1,11 +1,14 @@
 {
   "name": "interval-notation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Parse and build music intervals in shorthand notation",
-  "main": "index.js",
+  "main": "dist/interval-notation.js",
+  "module": "index",
   "scripts": {
-    "test": "mocha",
-    "api": "jsdoc2md index.js > API.md"
+    "pretest": "rollup -n IntervalNotation -f umd -i index.js -o dist/interval-notation.js",
+    "test": "jest --coverage",
+    "api": "jsdoc2md index.js > API.md",
+    "prepublish": "npm test"
   },
   "repository": {
     "type": "git",
@@ -28,6 +31,6 @@
   },
   "homepage": "https://github.com/danigb/interval-notation#readme",
   "devDependencies": {
-    "mocha": "*"
+    "jest": "^19.0.2"
   }
 }

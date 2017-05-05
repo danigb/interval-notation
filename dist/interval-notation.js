@@ -1,9 +1,15 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (factory((global.IntervalNotation = global.IntervalNotation || {})));
+}(this, (function (exports) { 'use strict';
+
 // shorthand tonal notation (with quality after number)
-var IVL_TNL = '([-+]?)(\\d+)(d{1,4}|m|M|P|A{1,4})'
+var IVL_TNL = '([-+]?)(\\d+)(d{1,4}|m|M|P|A{1,4})';
 // standard shorthand notation (with quality before number)
-var IVL_STR = '(AA|A|P|M|m|d|dd)([-+]?)(\\d+)'
-var COMPOSE = '(?:(' + IVL_TNL + ')|(' + IVL_STR + '))'
-var IVL_REGEX = new RegExp('^' + COMPOSE + '$')
+var IVL_STR = '(AA|A|P|M|m|d|dd)([-+]?)(\\d+)';
+var COMPOSE = '(?:(' + IVL_TNL + ')|(' + IVL_STR + '))';
+var IVL_REGEX = new RegExp('^' + COMPOSE + '$');
 
 /**
  * Parse a string with an interval in shorthand notation (https://en.wikipedia.org/wiki/Interval_(music)#Shorthand_notation)
@@ -30,32 +36,32 @@ var IVL_REGEX = new RegExp('^' + COMPOSE + '$')
  * // => { num: 3, q: 'M', dir: 1, simple: 3,
  * //      type: 'M', alt: 0, oct: 0, size: 4 }
  */
-export function parse (str, strict) {
+function parse (str, strict) {
   if (typeof str !== 'string') return null
-  var m = IVL_REGEX.exec(str)
+  var m = IVL_REGEX.exec(str);
   if (!m) return null
-  var i = { num: +(m[3] || m[8]), q: m[4] || m[6] }
-  i.dir = (m[2] || m[7]) === '-' ? -1 : 1
-  var step = (i.num - 1) % 7
-  i.simple = step + 1
-  i.type = TYPES[step]
-  i.alt = qToAlt(i.type, i.q)
-  i.oct = Math.floor((i.num - 1) / 7)
-  i.size = i.dir * (SIZES[step] + i.alt + 12 * i.oct)
+  var i = { num: +(m[3] || m[8]), q: m[4] || m[6] };
+  i.dir = (m[2] || m[7]) === '-' ? -1 : 1;
+  var step = (i.num - 1) % 7;
+  i.simple = step + 1;
+  i.type = TYPES[step];
+  i.alt = qToAlt(i.type, i.q);
+  i.oct = Math.floor((i.num - 1) / 7);
+  i.size = i.dir * (SIZES[step] + i.alt + 12 * i.oct);
   if (strict !== false) {
     if (i.type === 'M' && i.q === 'P') return null
   }
   return i
 }
-var SIZES = [0, 2, 4, 5, 7, 9, 11]
+var SIZES = [0, 2, 4, 5, 7, 9, 11];
 
-var TYPES = 'PMMPPMM'
+var TYPES = 'PMMPPMM';
 /**
  * Get the type of interval. Can be perfectavle ('P') or majorable ('M')
  * @param {Integer} num - the interval number
  * @return {String} `P` if it's perfectable, `M` if it's majorable.
  */
-export function type (num) {
+function type (num) {
   return TYPES[(num - 1) % 7]
 }
 
@@ -77,7 +83,7 @@ function num (simple, oct) { return simple + 7 * oct }
  * interval.shorthand(3, -1, 0, -1) // => 'm-3'
  * interval.shorthand(3, 1, 1, 1) // => 'A10'
  */
-export function shorthand (simple, alt, oct, dir) {
+function shorthand (simple, alt, oct, dir) {
   return altToQ(simple, alt) + dirStr(dir) + num(simple, oct)
 }
 /**
@@ -101,7 +107,7 @@ export function shorthand (simple, alt, oct, dir) {
  * interval.build(3, -1, 0, -1) // => '-3m'
  * interval.build(3, 1, 1, 1) // => '10A'
  */
-export function build (simple, alt, oct, dir) {
+function build (simple, alt, oct, dir) {
   return dirStr(dir) + num(simple, oct) + altToQ(simple, alt)
 }
 
@@ -118,8 +124,8 @@ export function build (simple, alt, oct, dir) {
  * qToAlt('P', 'A') // => 1 (for perfectables, 'A' means 1)
  * qToAlt('M', 'P') // => null (majorables can't be perfect)
  */
-export function qToAlt (num, q) {
-  var t = typeof num === 'number' ? type(num) : num
+function qToAlt (num, q) {
+  var t = typeof num === 'number' ? type(num) : num;
   if (q === 'M' && t === 'M') return 0
   if (q === 'P' && t === 'P') return 0
   if (q === 'm' && t === 'M') return -1
@@ -140,8 +146,8 @@ function fillStr (s, n) { return Array(Math.abs(n) + 1).join(s) }
  * @example
  * altToQ('M', 0) // => 'M'
  */
-export function altToQ (num, alt) {
-  var t = typeof num === 'number' ? type(Math.abs(num)) : num
+function altToQ (num, alt) {
+  var t = typeof num === 'number' ? type(Math.abs(num)) : num;
   if (alt === 0) return t === 'M' ? 'M' : 'P'
   else if (alt === -1 && t === 'M') return 'm'
   else if (alt > 0) return fillStr('A', alt)
@@ -149,3 +155,13 @@ export function altToQ (num, alt) {
   else return null
 }
 
+exports.parse = parse;
+exports.type = type;
+exports.shorthand = shorthand;
+exports.build = build;
+exports.qToAlt = qToAlt;
+exports.altToQ = altToQ;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
